@@ -3,10 +3,13 @@
     <header-store :title="title" :url-avatar="urlAvatar" />
     <v-card>
       <v-card-text>
-        <v-container>
+        <v-container mt-8>
           <v-row>
             <v-col cols="12">
               <div class="group">
+                <div class="icon-container">
+                  <div class="icon-search"></div>
+                </div>
                 <input type="text" :placeholder="placeholder" required />
                 <span class="bar"></span>
               </div>
@@ -37,17 +40,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-input::placeholder {
-  text-align: center;
-  font-family: Open Sans;
-  font-style: normal;
-  font-weight: 300;
-  font-size: 24px;
-  line-height: 33px;
-  color: #a8a8a8;
-}
-
-/* form starting stylings ------------------------------- */
 .group {
   position: relative;
   margin-bottom: 45px;
@@ -63,6 +55,15 @@ input {
 }
 input:focus {
   outline: none;
+}
+input::placeholder {
+  text-align: center;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 33px;
+  color: #a8a8a8;
 }
 
 .bar {
@@ -87,5 +88,21 @@ input:focus {
 }
 .bar:after {
   right: 50%;
+}
+
+.icon-container {
+  position: absolute;
+  padding: 10px 0px 0px 10px;
+  transition: 0.3s;
+  color: #787878;
+  width: 25px;
+  height: 23px;
+}
+
+.icon-search {
+  width: 50px;
+  height: 24px;
+  background: url('../assets/search.svg') no-repeat;
+  background-size: contain;
 }
 </style>

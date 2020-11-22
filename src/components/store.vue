@@ -1,45 +1,111 @@
 <template>
   <div>
     <header-store :title="title" :url-avatar="urlAvatar" />
-    <v-card>
-      <v-card-text>
-        <v-container mt-8>
+    <v-card class="elevation-0" color="#FFFFFF">
+      <v-card-text class="pb-0">
+        <v-container mt-8 px-10>
           <v-row>
             <v-col cols="12">
               <div class="group">
                 <div class="icon-container">
                   <div class="icon-search"></div>
                 </div>
-                <input type="text" :placeholder="placeholder" required />
+                <input
+                  v-model="search"
+                  type="text"
+                  :placeholder="placeholder"
+                />
                 <span class="bar"></span>
               </div>
             </v-col>
           </v-row>
         </v-container>
       </v-card-text>
+      <v-card-text class="pt-0">
+        <loader
+          v-if="loadingCards"
+          color="primary"
+          :size="50"
+          :loading="loadingCards"
+        />
+        <v-container v-else-if="productCards.length > 0" px-16 fluid>
+          <v-row dense>
+            <v-col
+              v-for="(card, index) in productCards"
+              :key="index"
+              :cols="12"
+              xl="4"
+              lg="4"
+              md="6"
+              sm="12"
+              xs="12"
+            >
+              <product-card :card="card" />
+            </v-col>
+          </v-row>
+        </v-container>
+        <p class="text-xs-center" v-else>
+          There are no sneakers for this search
+        </p>
+      </v-card-text>
     </v-card>
+    <v-alert :value="alertError" dense prominent type="error"></v-alert>
   </div>
 </template>
 
 <script>
 import HeaderStore from './header-store'
+import ProductCard from './product-card'
+import Loader from './loader'
 
 export default {
   name: 'Store',
   components: {
-    HeaderStore
+    HeaderStore,
+    ProductCard,
+    Loader
   },
   data() {
     return {
       title: 'Sneakers',
       urlAvatar: 'https://tinyurl.com/y2gkmq6s',
-      placeholder: 'Search for your sneaker'
+      placeholder: 'Search for your sneaker',
+      filteredProductCards: [],
+      loadingCards: false,
+      productCards: [],
+      alertError: false,
+      messageError: null,
+      search: null
+    }
+  },
+  async mounted() {
+    await this.getProductCards()
+  },
+  methods: {
+    async getProductCards() {
+      this.loadingCards = true
+      try {
+        let result = await this.$http.get(
+          'https://voliveira.s3-sa-east-1.amazonaws.com/sneakers/index.json'
+        )
+        this.productCards = result.data.results
+      } catch (error) {
+        this.messageError = error.message
+        this.alertError = true
+      } finally {
+        setTimeout(function() {
+          this.alertError = false
+        }, 6000)
+      }
+      this.loadingCards = false
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
 .group {
   position: relative;
   margin-bottom: 45px;
@@ -47,7 +113,6 @@ export default {
 input {
   font-size: 18px;
   padding: 10px 10px 10px 5px;
-  display: block;
   width: 100%;
   border: none;
   border-bottom: 1px solid #757575;

@@ -1,18 +1,18 @@
 <template>
   <div class="top">
-    <v-container>
-      <v-row>
+    <div>
+      <v-row class="py-3">
         <v-col cols="4"><v-spacer></v-spacer></v-col>
         <v-col cols="4" class="text-lg-center"
           ><span class="top__title">{{ title }}</span></v-col
         >
-        <v-col cols="4" class="text-lg-right">
+        <v-col cols="4" class="text-lg-right pr-5">
           <v-avatar size="35">
             <img :src="urlAvatar" />
           </v-avatar>
         </v-col>
       </v-row>
-    </v-container>
+    </div>
   </div>
 </template>
 

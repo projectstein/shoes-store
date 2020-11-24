@@ -1,14 +1,14 @@
 <template>
-  <v-flex xs12 pa-3>
-    <div class="text-xs-center">
+  <v-row>
+    <v-col class="text-xl-center text-lg-center text-xs-center" cols="12" pa-3>
       <v-progress-circular
         v-if="loading"
         :size="size"
         :color="color"
         indeterminate
       />
-    </div>
-  </v-flex>
+    </v-col>
+  </v-row>
 </template>
 <script>
 export default {

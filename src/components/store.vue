@@ -3,7 +3,7 @@
     <header-store :title="title" :url-avatar="urlAvatar" />
     <v-card class="elevation-0" color="#FFFFFF">
       <v-card-text class="pb-0">
-        <v-container mt-8 px-10>
+        <v-container mt-8 pa-0 px-16 fluid>
           <v-row>
             <v-col cols="12">
               <div class="group">
@@ -11,7 +11,7 @@
                   <div class="icon-search"></div>
                 </div>
                 <input
-                  v-model="search"
+                  v-model="searchDebouncer"
                   type="text"
                   :placeholder="placeholder"
                 />
@@ -24,14 +24,19 @@
       <v-card-text class="pt-0">
         <loader
           v-if="loadingCards"
-          color="primary"
+          color="#6B8067"
           :size="50"
           :loading="loadingCards"
         />
-        <v-container v-else-if="productCards.length > 0" px-16 fluid>
+        <v-container
+          v-else-if="filteredProductCards.length > 0"
+          pa-0
+          px-16
+          fluid
+        >
           <v-row dense>
             <v-col
-              v-for="(card, index) in productCards"
+              v-for="(card, index) in filteredProductCards"
               :key="index"
               :cols="12"
               xl="4"
@@ -39,12 +44,13 @@
               md="6"
               sm="12"
               xs="12"
+              class="pb-16"
             >
               <product-card :card="card" />
             </v-col>
           </v-row>
         </v-container>
-        <p class="text-xs-center" v-else>
+        <p class="text-xl-center text-lg-center text-xs-center headline" v-else>
           There are no sneakers for this search
         </p>
       </v-card-text>
@@ -70,12 +76,27 @@ export default {
       title: 'Sneakers',
       urlAvatar: 'https://tinyurl.com/y2gkmq6s',
       placeholder: 'Search for your sneaker',
-      filteredProductCards: [],
       loadingCards: false,
       productCards: [],
+      filteredProductCards: [],
       alertError: false,
       messageError: null,
-      search: null
+      search: null,
+      timeout: null
+    }
+  },
+  computed: {
+    searchDebouncer: {
+      get() {
+        return this.search
+      },
+      set(value) {
+        if (this.timeout) clearTimeout(this.timeout)
+        this.timeout = setTimeout(() => {
+          this.search = value
+          this.setFilteredCard()
+        }, 700)
+      }
     }
   },
   async mounted() {
@@ -89,6 +110,7 @@ export default {
           'https://voliveira.s3-sa-east-1.amazonaws.com/sneakers/index.json'
         )
         this.productCards = result.data.results
+        this.filteredProductCards = Array.from(this.productCards)
       } catch (error) {
         this.messageError = error.message
         this.alertError = true
@@ -98,6 +120,15 @@ export default {
         }, 6000)
       }
       this.loadingCards = false
+    },
+    setFilteredCard() {
+      if (!this.search)
+        this.filteredProductCards = Array.from(this.productCards)
+      else {
+        this.filteredProductCards = this.productCards.filter(product =>
+          product.description.includes(this.search)
+        )
+      }
     }
   }
 }
@@ -144,9 +175,6 @@ input::placeholder {
   bottom: 1px;
   position: absolute;
   background: #5264ae;
-  transition: 0.2s ease all;
-  -moz-transition: 0.2s ease all;
-  -webkit-transition: 0.2s ease all;
 }
 .bar:before {
   left: 50%;

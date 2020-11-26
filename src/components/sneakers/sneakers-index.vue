@@ -1,6 +1,6 @@
 <template>
   <div>
-    <header-store :title="title" :url-avatar="urlAvatar" />
+    <sneakers-header :title="title" :url-avatar="urlAvatar" />
     <v-card class="elevation-0" color="#FFFFFF">
       <v-card-text class="pb-0">
         <v-container mt-8 pa-0 px-16 fluid>
@@ -28,15 +28,10 @@
           :size="50"
           :loading="loadingCards"
         />
-        <v-container
-          v-else-if="filteredProductCards.length > 0"
-          pa-0
-          px-16
-          fluid
-        >
+        <v-container v-else-if="filteredCards.length > 0" pa-0 px-16 fluid>
           <v-row dense>
             <v-col
-              v-for="(card, index) in filteredProductCards"
+              v-for="(card, index) in filteredCards"
               :key="index"
               :cols="12"
               xl="4"
@@ -46,7 +41,7 @@
               xs="12"
               class="pb-16"
             >
-              <product-card :card="card" />
+              <card :card="card" @add-cart="goCheckout" />
             </v-col>
           </v-row>
         </v-container>
@@ -60,15 +55,16 @@
 </template>
 
 <script>
-import HeaderStore from './header-store'
-import ProductCard from './product-card'
-import Loader from './loader'
+import SneakersHeader from './sneakers-header'
+import Card from './sneakers-card'
+import Loader from '../loader'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Store',
   components: {
-    HeaderStore,
-    ProductCard,
+    SneakersHeader,
+    Card,
     Loader
   },
   data() {
@@ -77,8 +73,8 @@ export default {
       urlAvatar: 'https://tinyurl.com/y2gkmq6s',
       placeholder: 'Search for your sneaker',
       loadingCards: false,
-      productCards: [],
-      filteredProductCards: [],
+      sneakersCards: [],
+      filteredCards: [],
       alertError: false,
       messageError: null,
       search: null,
@@ -100,17 +96,18 @@ export default {
     }
   },
   async mounted() {
-    await this.getProductCards()
+    await this.getSneakersCards()
   },
   methods: {
-    async getProductCards() {
+    ...mapActions(['SET_SELECTED_CARD']),
+    async getSneakersCards() {
       this.loadingCards = true
       try {
         let result = await this.$http.get(
           'https://voliveira.s3-sa-east-1.amazonaws.com/sneakers/index.json'
         )
-        this.productCards = result.data.results
-        this.filteredProductCards = Array.from(this.productCards)
+        this.sneakersCards = result.data.results
+        this.filteredCards = Array.from(this.sneakersCards)
       } catch (error) {
         this.messageError = error.message
         this.alertError = true
@@ -122,13 +119,16 @@ export default {
       this.loadingCards = false
     },
     setFilteredCard() {
-      if (!this.search)
-        this.filteredProductCards = Array.from(this.productCards)
+      if (!this.search) this.filteredCards = Array.from(this.SneakersCards)
       else {
-        this.filteredProductCards = this.productCards.filter(product =>
+        this.filteredCards = this.sneakersCards.filter(product =>
           product.description.includes(this.search)
         )
       }
+    },
+    goCheckout(card) {
+      this.SET_SELECTED_CARD(card)
+      this.$router.push({ name: 'Checkout' })
     }
   }
 }
@@ -195,7 +195,7 @@ input::placeholder {
 .icon-search {
   width: 50px;
   height: 24px;
-  background: url('../assets/search.svg') no-repeat;
+  background: url('../../assets/search.svg') no-repeat;
   background-size: contain;
 }
 </style>

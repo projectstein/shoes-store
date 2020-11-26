@@ -1,16 +1,16 @@
 <template>
   <div class="home">
-    <store />
+    <sneakers />
   </div>
 </template>
 
 <script>
-import Store from '../components/store'
+import Sneakers from '../components/sneakers/sneakers-index'
 
 export default {
   name: 'Home',
   components: {
-    Store
+    Sneakers
   }
 }
 </script>

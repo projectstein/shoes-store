@@ -55,7 +55,7 @@
         class="white--text text-capitalize"
         color="#6B8067"
         v-text="labelButton"
-        @click="$emit('addCart', card)"
+        @click="$emit('add-cart', card)"
       ></v-btn>
     </v-card-actions>
   </v-card>

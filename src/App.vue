@@ -1,16 +1,11 @@
 <template>
   <v-app>
-    <store />
+    <router-view />
   </v-app>
 </template>
 
 <script>
-import Store from './components/store'
-
 export default {
-  name: 'App',
-  components: {
-    Store
-  }
+  name: 'App'
 }
 </script>

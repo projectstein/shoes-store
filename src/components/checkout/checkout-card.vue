@@ -43,7 +43,7 @@
           </v-col>
         </v-row>
       </v-container>
-      <v-item-group @change="setPayment">
+      <v-item-group :value="0" @change="setPayment">
         <v-container class="pa-0 px-10">
           <v-row>
             <v-col class="payment-title" cols="12"
@@ -123,6 +123,9 @@ export default {
   },
   computed: {
     ...mapState(['selectedCard'])
+  },
+  mounted() {
+    this.setPayment(0)
   },
   methods: {
     setPayment(value) {

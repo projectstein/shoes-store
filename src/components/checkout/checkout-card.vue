@@ -80,6 +80,7 @@
               color="#6B8067"
               :disabled="!payment"
               v-text="labelButton"
+              @click="$emit('go-review-and-confirmation', payment)"
             ></v-btn>
           </v-col>
         </v-row>
@@ -102,19 +103,19 @@ export default {
           title: 'Online Banking',
           src: 'bannerOnlineBank.svg',
           badget: true,
-          paymentForm: 'onlineBanking'
+          description: 'onlineBanking'
         },
         {
           title: 'Card payment',
           src: 'cardPayment.svg',
           badget: false,
-          paymentForm: 'cardPayment'
+          description: 'cardPayment'
         },
         {
           title: 'Apple Pay',
           src: 'applePay.svg',
           badget: false,
-          paymentForm: 'applePay'
+          description: 'applePay'
         }
       ],
       payment: null

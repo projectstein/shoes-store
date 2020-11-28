@@ -1,4 +1,5 @@
 import Checkout from '../components/checkout/checkout-index.vue'
+import ReviewAndConfirmation from '../components/review-and-confirmation/review-and-confirmation-index.vue'
 import Sneakers from '../components/sneakers/sneakers-index.vue'
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -15,6 +16,11 @@ const routes = [
     path: '/checkout',
     name: 'Checkout',
     component: Checkout
+  },
+  {
+    path: '/review-and-confirmation',
+    name: 'ReviewAndConfirmation',
+    component: ReviewAndConfirmation
   }
 ]
 

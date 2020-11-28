@@ -55,7 +55,7 @@
         class="white--text text-capitalize"
         color="#6B8067"
         v-text="labelButton"
-        @click="$emit('add-cart', card)"
+        @click="$emit('add-cart', setReturnCard())"
       ></v-btn>
     </v-card-actions>
   </v-card>
@@ -99,6 +99,15 @@ export default {
         list.push(i)
       }
       this.quantityList = list
+    },
+    setReturnCard() {
+      const totalCost = this.card.price * this.quantity
+      return {
+        ...this.card,
+        size: this.size,
+        quantity: this.quantity,
+        totalCost
+      }
     }
   }
 }

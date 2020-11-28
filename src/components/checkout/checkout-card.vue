@@ -5,9 +5,15 @@
         <v-row>
           <v-col class="black--text cart-description pl-10" cols="6">
             <p>Cart total</p>
-            <p class="subtitle ma-0">SS Sneaker</p>
-            <p class="content ma-0">x 1 Green Size 41</p>
-            <p class="content ma-0">Item #2839u512401</p>
+            <p class="subtitle ma-0">{{ selectedCard.description }}</p>
+            <p class="content ma-0">
+              {{
+                `x ${selectedCard.quantity} ${selectedCard.color} Size ${selectedCard.size}`
+              }}
+            </p>
+            <p class="content ma-0">
+              {{ `Item #${selectedCard.id}` }}
+            </p>
           </v-col>
           <v-col class="black--text delivery-description pl-10" cols="6">
             <p>Delivery details</p>
@@ -31,28 +37,36 @@
                 <p class="content ma-0">Delivery included</p>
               </v-col>
               <v-col>
-                <p class="cost">$100</p>
+                <p class="cost">{{ `$${selectedCard.totalCost}` }}</p>
               </v-col>
             </v-row>
           </v-col>
         </v-row>
       </v-container>
-      <v-container class="pa-0 px-10">
-        <v-row>
-          <v-col class="payment-title" cols="12"
-            >Select your payment method</v-col
-          >
-          <v-col class="pb-0" cols="12">
-            <checkout-payment />
-          </v-col>
-          <v-col class="pb-0" cols="12">
-            <checkout-payment />
-          </v-col>
-          <v-col class="pb-0" cols="12">
-            <checkout-payment />
-          </v-col>
-        </v-row>
-      </v-container>
+      <v-item-group @change="setPayment">
+        <v-container class="pa-0 px-10">
+          <v-row>
+            <v-col class="payment-title" cols="12"
+              >Select your payment method</v-col
+            >
+
+            <v-col
+              v-for="(payment, index) in paymentList"
+              :key="index"
+              class="pb-0"
+              cols="12"
+            >
+              <v-item v-slot="{ active, toggle }">
+                <checkout-payment
+                  :active="active"
+                  @click="toggle"
+                  :payment="payment"
+                />
+              </v-item>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-item-group>
     </v-card-text>
     <v-card-actions>
       <v-container class="pb-0 px-10">
@@ -64,6 +78,7 @@
             <v-btn
               class="white--text text-capitalize"
               color="#6B8067"
+              :disabled="!payment"
               v-text="labelButton"
             ></v-btn>
           </v-col>
@@ -81,11 +96,37 @@ export default {
   components: { checkoutPayment },
   data() {
     return {
-      labelButton: 'Continue'
+      labelButton: 'Continue',
+      paymentList: [
+        {
+          title: 'Online Banking',
+          src: 'bannerOnlineBank.svg',
+          badget: true,
+          paymentForm: 'onlineBanking'
+        },
+        {
+          title: 'Card payment',
+          src: 'cardPayment.svg',
+          badget: false,
+          paymentForm: 'cardPayment'
+        },
+        {
+          title: 'Apple Pay',
+          src: 'applePay.svg',
+          badget: false,
+          paymentForm: 'applePay'
+        }
+      ],
+      payment: null
     }
   },
   computed: {
     ...mapState(['selectedCard'])
+  },
+  methods: {
+    setPayment(value) {
+      this.payment = this.paymentList[value]
+    }
   }
 }
 </script>

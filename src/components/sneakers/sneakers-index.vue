@@ -119,7 +119,7 @@ export default {
       this.loadingCards = false
     },
     setFilteredCard() {
-      if (!this.search) this.filteredCards = Array.from(this.SneakersCards)
+      if (!this.search) this.filteredCards = Array.from(this.sneakersCards)
       else {
         this.filteredCards = this.sneakersCards.filter(product =>
           product.description.includes(this.search)

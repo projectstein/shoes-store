@@ -71,8 +71,35 @@ export default {
       if (payment.description !== 'onlineBanking') {
         this.$router.push({ name: 'ReviewAndConfirmation' })
       } else {
-        alert('integração')
+        this.integration()
       }
+    },
+    integration() {
+      const PayWithMyBank = window.PayWithMyBank
+      PayWithMyBank.addPanelListener(function(command, event) {
+        if (command === 'event' && event.type === 'new_location') {
+          if (event.data.indexOf('#success') === 0) {
+            alert('success!')
+            this.$router.push({ name: 'ReviewAndConfirmation' })
+          } else {
+            alert('cancel!')
+            this.$router.push({ name: 'Checkout' })
+          }
+          return false
+        }
+      })
+      PayWithMyBank.establish({
+        accessId: 'D61EC9BAF0BB369B9438',
+        merchantId: this.selectedCard.id,
+        metadata: { demo: 'enabled' },
+        currency: 'USD',
+        paymentType: 'Deferred',
+        amount: this.selectedCard.totalCost,
+        description: 'projectstein@gmail.com',
+        merchantReference: 'a3e54d0b-af71-40b6-a98d-c8a10d485e29',
+        returnUrl: '#success',
+        cancelUrl: 'localhost:8080/checkout'
+      })
     }
   }
 }

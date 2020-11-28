@@ -40,7 +40,7 @@ $text-color-inactive: #bebebe;
 
 .stepper-horizontal {
   display: table;
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   .step {
     display: table-cell;

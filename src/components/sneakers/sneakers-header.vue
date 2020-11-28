@@ -6,7 +6,7 @@
         <v-col cols="4" class="text-lg-center"
           ><span class="top__title">{{ title }}</span></v-col
         >
-        <v-col cols="4" class="text-lg-right pr-5">
+        <v-col cols="4" class="text-right pr-16">
           <v-avatar size="35">
             <img :src="urlAvatar" />
           </v-avatar>

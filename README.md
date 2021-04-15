@@ -1,4 +1,4 @@
-# trustly
+# shoes-store
 
 ## Project setup
 ```
